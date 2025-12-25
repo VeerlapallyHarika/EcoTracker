@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+<!-- Main Container -->
+    <div class="container">
+        <!-- Home Section -->
+        <section id="home" class="active">
+            <div class="hero">
+                <h1>Welcome to EcoTracker</h1>
+                <p>Track your carbon footprint, adopt green habits, and make a real environmental impact. Every action counts! 🌱</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h2>📊 Carbon Calculator</h2>
+                    <p>Calculate your personal carbon footprint based on energy use, transportation, diet, and waste. Get accurate estimates powered by real emission factors.</p>
+                    <button class="btn btn-primary" onclick="switchTab('calculator')">Start Calculating →</button>
+                </div>
+
+                <div class="card">
+                    <h2>♻️ Eco Habits</h2>
+                    <p>Track daily sustainable practices and build green habits. Monitor your progress toward a more eco-friendly lifestyle with real impact data.</p>
+                    <button class="btn btn-primary" onclick="switchTab('habits')">Build Habits →</button>
+                </div>
+
+                <div class="card">
+                    <h2>🌍 Impact Dashboard</h2>
+                    <p id="impactCardText">View your environmental impact with detailed analytics. See how your actions contribute to reducing emissions and preserving resources.</p>
+                    <button class="btn btn-primary" onclick="switchTab('impact'); setTimeout(() => drawEmissionChart(), 100);">View Impact →</button>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="stat">
+                    <div class="stat-number">585 GW</div>
+                    <div class="stat-label">Renewable Energy Added Globally in 2024</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">46%</div>
+                    <div class="stat-label">Global Installed Capacity from Renewables</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">22.13%</div>
+                    <div class="stat-label">India's Renewable Energy Share (2024-25)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Carbon Calculator Section -->
+        <section id="calculator">
+            <h1 style="margin-bottom: var(--space-24); color: var(--color-primary);">Carbon Footprint Calculator</h1>
+            <p style="margin-bottom: var(--space-24); color: var(--color-text-light); font-size: 16px;">Calculate your annual carbon emissions based on your lifestyle choices. The calculation uses standard emission factors.</p>
+
+            <div class="grid">
+                <!-- Energy Section -->
+                <div class="card">
+                    <h3>⚡ Home Energy</h3>
+                    <div class="form-group">
+                        <label for="electricity">Monthly Electricity (kWh)</label>
+                        <input type="number" id="electricity" placeholder="e.g., 200" min="0" value="200">
+                        <small style="color: var(--color-text-light);">Emission factor: 0.233 kg CO₂/kWh (average grid)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="gas">Monthly Natural Gas (m³)</label>
+                        <input type="number" id="gas" placeholder="e.g., 10" min="0" value="10">
+                        <small style="color: var(--color-text-light);">Emission factor: 1.94 kg CO₂/m³</small>
+                    </div>
+                </div>
+
+                <!-- Transportation Section -->
+                <div class="card">
+                    <h3>🚗 Transportation</h3>
+                    <div class="form-group">
+                        <label for="carMiles">Monthly Car Travel (km)</label>
+                        <input type="number" id="carMiles" placeholder="e.g., 800" min="0" value="800">
+                        <small style="color: var(--color-text-light);">Emission factor: 0.27 kg CO₂/km (average car)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="publicTransit">Monthly Public Transit (km)</label>
+                        <input type="number" id="publicTransit" placeholder="e.g., 200" min="0" value="200">
+                        <small style="color: var(--color-text-light);">Emission factor: 0.05 kg CO₂/km (bus/train)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="flights">Annual Flights (hours)</label>
+                        <input type="number" id="flights" placeholder="e.g., 10" min="0" value="5">
+                        <small style="color: var(--color-text-light);">Emission factor: 0.29 kg CO₂/km (economy)</small>
+                    </div>
+                </div>
+
+                <!-- Diet Section -->
+                <div class="card">
+                    <h3>🍽️ Diet</h3>
+                    <div class="form-group">
+                        <label for="diet">Dietary Pattern</label>
+                        <select id="diet">
+                            <option value="meat-heavy">Meat-Heavy (2.5 kg CO₂/month)</option>
+                            <option value="mixed" selected>Mixed Diet (1.8 kg CO₂/month)</option>
+                            <option value="vegetarian">Vegetarian (1.2 kg CO₂/month)</option>
+                            <option value="vegan">Vegan (0.8 kg CO₂/month)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="wasteFood">Food Waste (% of groceries)</label>
+                        <input type="number" id="wasteFood" placeholder="e.g., 15" min="0" max="100" value="15">
+                        <small style="color: var(--color-text-light);">Higher waste = more emissions</small>
+                    </div>
+                </div>
+
+                <!-- Waste Section -->
+                <div class="card">
+                    <h3>♻️ Waste</h3>
+                    <div class="form-group">
+                        <label for="wasteGenerated">Weekly Waste (kg)</label>
+                        <input type="number" id="wasteGenerated" placeholder="e.g., 5" min="0" value="5">
+                        <small style="color: var(--color-text-light);">Emission factor: 0.61 kg CO₂/kg (landfill)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="recyclingRate">Recycling Rate (%)</label>
+                        <input type="number" id="recyclingRate" placeholder="e.g., 40" min="0" max="100" value="40">
+                        <small style="color: var(--color-text-light);">Reduces emissions by avoidance</small>
+                    </div>
+                </div>
+
+                <!-- Water Section -->
+                <div class="card">
+                    <h3>💧 Water</h3>
+                    <div class="form-group">
+                        <label for="waterUsage">Monthly Water Usage (m³)</label>
+                        <input type="number" id="waterUsage" placeholder="e.g., 15" min="0" value="15">
+                        <small style="color: var(--color-text-light);">Emission factor: 0.25 kg CO₂/m³</small>
+                    </div>
+                </div>
+
+                <!-- Shopping Section -->
+                <div class="card">
+                    <h3>🛍️ Shopping</h3>
+                    <div class="form-group">
+                        <label for="shopping">Monthly Spending on New Items (₹)</label>
+                        <input type="number" id="shopping" placeholder="e.g., 5000" min="0" value="5000">
+                        <small style="color: var(--color-text-light);">Emission factor: 0.000082 kg CO₂/₹</small>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: var(--space-32) 0;">
+                <button class="btn btn-primary btn-full" style="padding: var(--space-16) var(--space-32); font-size: 18px;" onclick="calculateFootprint()">Calculate My Carbon Footprint 🔍</button>
+            </div>
+
+            <div id="calculatorResults"></div>
+
+            <div style="text-align: center; margin: var(--space-32) 0; padding: var(--space-20); background: rgba(16, 185, 129, 0.1); border-radius: 8px; display: none;" id="quickLinks">
+                <p style="color: var(--color-text); margin-bottom: var(--space-16);">📌 Quick Navigation</p>
+                <button class="btn btn-secondary" onclick="switchTab('habits')" style="margin: 0 var(--space-8);">Go to Eco Habits →</button>
+                <button class="btn btn-secondary" onclick="switchTab('impact'); setTimeout(() => drawEmissionChart(), 100);">View Impact →</button>
+            </div>
+        </section>
+
+        <!-- Eco Habits Section -->
+        <section id="habits">
+            <h1 style="margin-bottom: var(--space-24); color: var(--color-primary);">Build Eco Habits 🌱</h1>
+            <p style="margin-bottom: var(--space-24); color: var(--color-text-light); font-size: 16px;">Track your daily sustainable practices. Consistency creates change!</p>
+
+            <div class="alert alert-info">
+                ✨ Check off habits as you complete them. Your progress is saved and contributes to your environmental impact reduction.
+            </div>
+
+            <div id="habitsList"></div>
+
+            <div style="text-align: center; margin: var(--space-32) 0;">
+                <button class="btn btn-primary" onclick="resetHabits()">Reset Today's Progress</button>
+                <button class="btn btn-secondary" onclick="viewHabitStats()" style="margin-left: var(--space-12);">View Habit Statistics</button>
+            </div>
+
+            <div id="habitStats"></div>
+
+            <div style="text-align: center; margin: var(--space-32) 0; padding: var(--space-20); background: rgba(34, 197, 94, 0.1); border-radius: 8px; border-top: 4px solid var(--color-success);">
+                <p style="color: var(--color-text); margin-bottom: var(--space-16);">🌍 Want to see your overall impact?</p>
+                <button class="btn btn-success" onclick="switchTab('impact'); setTimeout(() => drawEmissionChart(), 100); window.scrollTo(0, 0);" style="background: var(--color-success); color: white; padding: var(--space-12) var(--space-24);">View Impact Dashboard →</button>
+            </div>
+        </section>
+
+        <!-- Impact Summary Section -->
+        <section id="impact">
+            <h1 style="margin-bottom: var(--space-24); color: var(--color-primary);">Your Environmental Impact</h1>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>📈 Yearly Footprint</h3>
+                    <div id="yearlyFootprint" style="font-size: 36px; color: var(--color-primary); font-weight: 800; margin: var(--space-16) 0;">
+                        0 kg CO₂
+                    </div>
+                    <p style="color: var(--color-text-light); margin-bottom: var(--space-12);">Your estimated annual carbon emissions</p>
+                </div>
+
+                <div class="card">
+                    <h3>🌍 Comparison</h3>
+                    <div id="comparison" style="color: var(--color-text-light);">
+                        <p>Calculate your footprint to see comparisons</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Reduction Potential</h3>
+                    <div id="reductionPotential"></div>
+                </div>
+            </div>
+
+            <div class="chart-container" style="margin: var(--space-24) 0;">
+                <h3 style="margin-bottom: var(--space-20); color: var(--color-primary);">Carbon Emissions Breakdown</h3>
+                <div id="chartVisualization" style="width: 100%; min-height: 400px; background: var(--color-border); border-radius: 8px; padding: var(--space-20); display: none;">
+                    <canvas id="emissionChart" width="800" height="400"></canvas>
+                </div>
+                <div id="noDataChart" style="text-align: center; padding: var(--space-32); color: var(--color-text-light);">
+                    <p style="font-size: 16px;">📊 Calculate your footprint to see the emissions breakdown chart</p>
+                </div>
+                <div id="emissionDetails" style="margin-top: var(--space-20);">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Emissions (kg CO₂/year)</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody id="emissionTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: var(--space-24);">
+                <h3>🌳 Carbon Offset Equivalents</h3>
+                <p style="color: var(--color-text-light); margin-bottom: var(--space-16);">Here's what you'd need to offset your emissions:</p>
+                <div id="offsetData"></div>
+            </div>
+
+            <div style="margin-top: var(--space-32); padding: var(--space-24); background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%); border-radius: var(--radius); color: white; text-align: center;">
+                <h3 style="color: white; margin-bottom: var(--space-16);">💚 Ready to Take Action?</h3>
+                <p style="margin-bottom: var(--space-20); opacity: 0.95;">Build sustainable habits, learn green tips, and track your progress toward a carbon-neutral lifestyle.</p>
+                <button class="btn" onclick="switchTab('habits'); window.scrollTo(0, 0);" style="background: white; color: var(--color-primary); font-weight: 700; padding: var(--space-12) var(--space-24);">Start Building Habits →</button>
+                <button class="btn" onclick="switchTab('tips'); window.scrollTo(0, 0);" style="background: rgba(255, 255, 255, 0.2); color: white; border: 2px solid white; margin-left: var(--space-12); padding: var(--space-12) var(--space-24);">Explore Green Tips →</button>
+            </div>
+        </section>
+
+        <!-- Green Tips Section -->
+        <section id="tips">
+            <h1 style="margin-bottom: var(--space-24); color: var(--color-primary);">Green Living Tips 🌿</h1>
+            <p style="margin-bottom: var(--space-24); color: var(--color-text-light); font-size: 16px;">Science-backed sustainability recommendations to reduce your environmental impact.</p>
+
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">⚡</div>
+                    <h4>Energy Efficiency</h4>
+                    <p>Switch to LED bulbs (80% less energy), unplug devices when not in use, and use programmable thermostats. This can reduce energy emissions by 30-50%.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">🚴</div>
+                    <h4>Green Transportation</h4>
+                    <p>Cycle, walk, or use public transit when possible. Electric vehicles produce 50% fewer emissions than gasoline cars over their lifetime.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">🍃</div>
+                    <h4>Plant-Based Diet</h4>
+                    <p>Eating meat produces 5-10x more emissions than plant foods. Swap 2-3 meals per week for vegetarian options to significantly reduce your footprint.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">♻️</div>
+                    <h4>Waste Reduction</h4>
+                    <p>Follow the 3Rs: Reduce consumption, Reuse items, and Recycle properly. Composting food waste prevents methane emissions from landfills.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">💧</div>
+                    <h4>Water Conservation</h4>
+                    <p>Install low-flow showerheads, fix leaks, and reduce water heating. Saving water saves energy and reduces wastewater treatment emissions.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">☀️</div>
+                    <h4>Renewable Energy</h4>
+                    <p>Switch to renewable energy plans or install solar panels. Renewables now account for 46% of global capacity and are the fastest-growing energy source.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">🛍️</div>
+                    <h4>Conscious Shopping</h4>
+                    <p>Buy secondhand, choose sustainable brands, and avoid fast fashion. One new outfit's production emits ~7 kg CO₂. Thrifting saves 2-7 kg per item.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">🌳</div>
+                    <h4>Support Reforestation</h4>
+                    <p>Trees absorb ~20 kg CO₂ over their lifetime. Plant native trees, support forest conservation, or invest in verified carbon offset projects.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">📱</div>
+                    <h4>Digital Footprint</h4>
+                    <p>Reduce data storage (each email stored = emissions), limit video streaming, and delete old files. Data centers consume 3% of global electricity.</p>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: var(--space-32);">
+                <h3>💡 Did You Know?</h3>
+                <ul style="margin-left: var(--space-20); color: var(--color-text-light);">
+                    <li style="margin-bottom: var(--space-12);">🌍 Global renewable energy additions hit a record 585 GW in 2024, with solar accounting for 452 GW (77% of all renewables).</li>
+                    <li style="margin-bottom: var(--space-12);">🇮🇳 India's renewable energy capacity reached 220.1 GW in 2024-25, accounting for 46.32% of total installed capacity.</li>
+                    <li style="margin-bottom: var(--space-12);">🚗 Switching from a gasoline car to an EV can save 2-3 tons of CO₂ per year, depending on your electricity grid's carbon intensity.</li>
+                    <li style="margin-bottom: var(--space-12);">🥦 A plant-based diet can reduce your carbon footprint by up to 73% compared to a meat-heavy diet.</li>
+                    <li style="margin-bottom: var(--space-12);">🌳 One tree can absorb about 20 kg of CO₂ over 20 years—planting trees is one of the most impactful actions you can take.</li>
+                    <li style="margin-bottom: var(--space-12);">📦 Average household waste generates 1,200 kg CO₂ per year. Reducing waste by 50% saves 600 kg CO₂ annually.</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: var(--space-32); padding: var(--space-24); background: var(--color-surface); border-radius: var(--radius); border: 2px solid var(--color-border);">
+                <h3 style="color: var(--color-primary); margin-bottom: var(--space-16); text-align: center;">🎯 Complete Your Green Journey</h3>
+                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-16);">
+                    <div style="text-align: center; padding: var(--space-16);">
+                        <div style="font-size: 32px; margin-bottom: var(--space-8);">📊</div>
+                        <button class="btn btn-primary btn-full" onclick="switchTab('calculator'); window.scrollTo(0, 0);">Calculate Footprint</button>
+                    </div>
+                    <div style="text-align: center; padding: var(--space-16);">
+                        <div style="font-size: 32px; margin-bottom: var(--space-8);">🌱</div>
+                        <button class="btn btn-primary btn-full" onclick="switchTab('habits'); window.scrollTo(0, 0);">Track Habits</button>
+                    </div>
+                    <div style="text-align: center; padding: var(--space-16);">
+                        <div style="font-size: 32px; margin-bottom: var(--space-8);">📈</div>
+                        <button class="btn btn-primary btn-full" onclick="switchTab('impact'); setTimeout(() => drawEmissionChart(), 100); window.scrollTo(0, 0);">View Impact</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
