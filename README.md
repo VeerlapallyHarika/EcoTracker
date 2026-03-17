@@ -85,7 +85,7 @@ Built as a learning and awareness project
 
 
 
-<img width="1888" height="486" alt="Screenshot 2026-03-17 121443" src="https://github.com/user-attachments/assets/7df3aa7f-aa35-46ea-9157-60fbe8d6f991" />
+
 
 
 
